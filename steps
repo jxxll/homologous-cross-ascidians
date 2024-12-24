@@ -1,0 +1,12 @@
+##### install OrthoFinder, FastTree, MAFFT, phylopypruner packages
+
+######First, put the protein files into a directory,then use OrthoFinder build cross-species orthogroups
+orthofinder -f files/ -t 20 -S mmseqs -M msa
+
+###Second, use the Orthogroup_Sequences for alignment and creating phylogenetic trees
+for i in *fa;do mafft --maxiterate 1000 --localpair  $i > ${i%%.fa}.fas;done
+for i in *fas;do FastTree $i > ${i%%.fas}.nw;done
+
+
+#####Third, put the *.fa and *.fas in the same dir, use phylopypruner prune the phylogenetic tree to get sing-cell phylogenetic tree
+for i in OG0040*;do phylopypruner --dir $i --min-len 100 --trim-lb 4 --min-support 0.75 --prune MI --min-taxa 2 --min-otu-occupancy 0.0 --min-gene-occupancy 0.0;done
