@@ -1,0 +1,31 @@
+##### install OrthoFinder, FastTree, MAFFT, phylopypruner packages
+
+#####  Step1, put the protein files into a directory,then use OrthoFinder build cross-species orthogroups
+orthofinder -f files/ -t 20 -S mmseqs -M msa
+
+#####  Step2, use the Orthogroup_Sequences for alignment and creating phylogenetic trees
+for i in *fa;do mafft --maxiterate 1000 --localpair  $i > ${i%%.fa}.fas;done
+for i in *fas;do FastTree $i > ${i%%.fas}.nw;done
+
+
+#####  Step3, put the *.fa and *.fas in the same dir, use phylopypruner prune the phylogenetic tree to get sing-cell phylogenetic tree
+for i in *fas; do
+    base_name="${i%%.fas}"
+    mkdir -p "$base_name"
+    mv "$i" "$base_name/"
+    if [[ -f "${base_name}.nw" ]]; then
+        mv "${base_name}.nw" "$base_name/"
+    fi
+done
+
+for i in *;do phylopypruner --dir $i --min-len 100 --trim-lb 4 --min-support 0.75 --prune MI --min-taxa 2 --min-otu-occupancy 0.0 --min-gene-occupancy 0.0;done
+
+#####  Step4, use all /phylopypruner_output/output_alignments results into a table to show Orthologous
+
+#####  Step5, use reciprologs analyse the best hit between two species based on blastp
+reciprologs -p 10 --chain -q 30 -o ab.txt --one_to_one --logging Aproteins.fasta Bproteins.fasta blastp
+
+#####  Step6, use the reciprologs results with mouse results as a reference to fill in the gaps within orthogroups.
+#####  use R match function
+#####  Step6, use the EggNOG results with annotation results as a reference to fill in the gaps within orthogroups.
+#####  use R match function
