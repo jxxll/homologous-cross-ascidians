@@ -5,9 +5,13 @@ This method is designed for the creation of phylogenetic trees for single-copy o
 
 # Required Dependencies
 · conda install OrthoFinder
+
 · conda install MAFFT
+
 · conda install FAastTree
+
 · pip install phylopypruner
+
 · reciprologs  https://github.com/glarue/reciprologs/blob/main/reciprologs
 
 # Usage
