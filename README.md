@@ -8,7 +8,7 @@ This method is designed for the creation of phylogenetic trees for single-copy o
 
 · conda install MAFFT
 
-· conda install FAastTree
+· conda install FastTree
 
 · pip install phylopypruner
 
